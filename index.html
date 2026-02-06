@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Surprise For You 💖</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap');
+
+        :root {
+            --pink-light: #ffe4e6;
+            --pink-medium: #fbcfe8;
+            --romantic-red: #e11d48;
+            --white-soft: rgba(255, 255, 255, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--pink-light) 0%, #ffffff 50%, var(--pink-medium) 100%);
+            font-family: 'Quicksand', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Falling Decorations */
+        .decoration {
+            position: absolute;
+            top: -50px;
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main Card */
+        .card {
+            background: var(--white-soft);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(225, 29, 72, 0.15);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            border: 2px solid white;
+            z-index: 10;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            color: var(--romantic-red);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .message-box {
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .message {
+            font-size: 1.2rem;
+            color: #4b5563;
+            line-height: 1.6;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* The Surprise Button */
+        .surprise-btn {
+            background: var(--romantic-red);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.3);
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .surprise-btn:active {
+            transform: scale(0.95);
+        }
+
+        .surprise-btn:hover {
+            box-shadow: 0 6px 20px rgba(225, 29, 72, 0.5);
+            background: #be123c;
+        }
+
+        .pulse {
+            animation: pulse-animation 2s infinite;
+        }
+
+        @keyframes pulse-animation {
+            0% {
+                box-shadow: 0 0 0 0px rgba(225, 29, 72, 0.4);
+            }
+
+            100% {
+                box-shadow: 0 0 0 20px rgba(225, 29, 72, 0);
+            }
+        }
+
+        /* Final Stage Styles */
+        .final-heart {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 1rem;
+            animation: beat 0.8s infinite;
+        }
+
+        @keyframes beat {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        /* Floating Hearts Container */
+        #heart-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="heart-particles"></div>
+
+    <div class="card" id="mainCard">
+        <h1 id="greeting">Hey Neeshu... 💖</h1>
+
+        <div class="message-box">
+            <p class="message" id="messageDisplay">I have a little surprise for you. Click the button below to see!</p>
+        </div>
+
+        <button class="surprise-btn pulse" id="actionBtn" onclick="nextMessage()">
+            Click for a Surprise ✨
+        </button>
+    </div>
+
+    <script>
+        // --- Configuration ---
+        const herName = "Neeshu"; // You can change this to her actual name
+        const messages = [
+            "Hey " + herName + "... this is a little surprise for you 💖",
+            "Laddu tumhari smile meri favorite hai 😊",
+            "Tumse baat karke mujhe aacha feel hota hai 💕",
+            "You are not just a friend, you are special for me, 🌹",
+            "Har pal tumhare baare mein sochna achha lagta hai ✨",
+            "Tum meri life ki sabse khoobsurat reality ho 🌸",
+            "Mujhe tum se bahut-bahut..... pyar hai 💝"
+        ];
+
+        let currentStep = 0;
+
+        // --- Functions ---
+
+        // Initialize greeting
+        document.getElementById('greeting').innerText = `Hey ${herName}... 💖`;
+
+        function createDecoration() {
+            const decs = ['🌹', '❤️', '💖', '✨', '🌸'];
+            const dec = document.createElement('div');
+            dec.className = 'decoration';
+            dec.innerText = decs[Math.floor(Math.random() * decs.length)];
+            dec.style.left = Math.random() * 100 + 'vw';
+            dec.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            dec.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            document.body.appendChild(dec);
+
+            setTimeout(() => {
+                dec.remove();
+            }, 5000);
+        }
+
+        // Keep roses falling
+        setInterval(createDecoration, 300);
+
+        function nextMessage() {
+            currentStep++;
+            const display = document.getElementById('messageDisplay');
+            const btn = document.getElementById('actionBtn');
+            const card = document.getElementById('mainCard');
+
+            // Reset animation
+            display.style.animation = 'none';
+            display.offsetHeight; // Trigger reflow
+            display.style.animation = 'fadeIn 0.5s ease-out';
+
+            if (currentStep < messages.length) {
+                display.innerText = messages[currentStep];
+
+                // Change button text randomly to keep it playful
+                const btnTexts = ["One more click?", "And...?", "Click again!", "Almost there...", "Something more?"];
+                btn.innerText = btnTexts[Math.floor(Math.random() * btnTexts.length)];
+
+                // Add extra hearts on click
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(createDecoration, i * 100);
+                }
+
+            } else {
+                // Final Reveal with Happy Rose Day message
+                display.innerHTML = `
+                    <span class="final-heart">💝</span><br>
+                    <strong>Mujhe tum sach me bahut pasand ho.</strong><br>
+                    <span style="color: #e11d48; font-size: 1.4rem; font-weight: bold;">Happy Rose Day! 🌹</span>
+                `;
+                btn.innerText = "Forever Yours ❤️";
+                btn.classList.remove('pulse');
+                btn.style.background = "#9f1239";
+                btn.onclick = null; // Disable button
+
+                // Celebration effect
+                startFinalCelebration();
+            }
+        }
+
+        function startFinalCelebration() {
+            setInterval(() => {
+                createDecoration();
+            }, 100);
+        }
+
+        // Initial decorations
+        for (let i = 0; i < 10; i++) {
+            createDecoration();
+        }
+    </script>
+</body>
+
+</html>
